@@ -1,0 +1,2842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <link rel="stylesheet" href="home_css.css">
+    <!-- Datatable plugin CSS file -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+    <!-- jQuery library file -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js">
+    </script>
+
+    <!-- Datatable plugin JS library file -->
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js">
+    </script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<style>
+  
+
+    .table_container_class {
+        display: flex;
+        margin: auto;
+        margin-top: 25px;
+
+        justify-content: center;
+        align-items: center;
+        transition: all 300ms ease;
+
+
+    }
+
+
+
+
+    .display {
+        border-collapse: collapse;
+        margin: 25px 0;
+        border-top: 5px;
+        font-size: 0.9em;
+        font-family: sans-serif;
+        min-width: 400px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        width: 70%;
+        transition: all 300ms ease;
+    }
+
+    .display thead tr {
+        background-color: #009879;
+        color: #ffffff;
+        text-align: left;
+
+    }
+
+    .display th,
+    .display td {
+        padding: 12px 15px;
+    }
+
+    .display tbody tr {
+        border-bottom: thin solid #dddddd;
+    }
+
+    #checkbox_a {
+        display: none;
+    }
+
+    .display tbody tr:last-of-type {
+        border-bottom: 2px solid #009879;
+    }
+
+    .display tbody tr.active-row {
+        font-weight: bold;
+        color: #009879;
+    }
+
+    tr {
+        height: 38px;
+    }
+
+    #tableID_filter {
+        margin-bottom: 30px;
+    }
+
+    #tableID_paginate {
+        margin-top: 15px;
+    }
+
+    #tableID_filter input {
+        width: 400px;
+        margin-left: 10px;
+        margin-right: 7px;
+        border-radius: 5px;
+        height: 35px;
+        font-size: large;
+    }
+
+    #tableID_filter {
+
+        color: #065142;
+        font-size: large;
+    }
+
+    #tableID_length label {
+        color: #065142;
+        font-size: large;
+    }
+
+    #tableID_length select {
+        width: 60px;
+        margin-left: 10px;
+        margin-right: 7px;
+        border-radius: 5px;
+
+    }
+
+    .buttonclass {
+        margin: 0 auto;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        padding: 20px;
+        background-color: white !important;
+        display: flex;
+        justify-content: flex-start;
+        margin-left: 14%;
+        margin-right: 14%;
+        align-items: center;
+        margin-top: 60px;
+        transition: all 300ms ease;
+
+    }
+
+    .b1 {
+        padding: 8px;
+
+        margin-right: 10px;
+        background-color: #009879;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .b2 {
+        padding: 8px;
+
+        margin-right: 10px;
+        background-color: #e43a3a;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .b3 {
+        padding: 10px;
+
+        margin-right: 10px;
+        background-color: #256be4;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        position: relative;
+        left: 40%;
+    }
+
+    .insertvalues {
+        margin: 0 auto;
+
+        padding: 20px;
+        display: flex;
+        justify-content: flex-start;
+        background-color: white !important;
+        margin-left: 14%;
+        margin-right: 14%;
+        margin-top: 5px;
+        align-items: flex-start;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        display: none;
+        color: black;
+        -prefix-animation: slide 1s ease 3.5s forwards;
+        
+
+
+    }
+    @-prefix-keyframes slide {
+  from {height: 0;}
+  to {height: 300px;}
+}
+
+    .insertvalues >div{
+        display: inline-flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        margin-top: 10px;
+    }
+   
+    
+</style>
+<script>
+
+    /* Initialization of datatable */
+    $(document).ready(function () {
+        $('#tableID').DataTable({
+            info: false, aaSorting: [],
+            "aoColumnDefs": [
+                { "bSortable": false, "aTargets": [0] },
+                { "bSearchable": false, "aTargets": [0] }
+            ]
+        });
+    });
+</script>
+<script>
+    function myFunction() {
+        // Declare variables
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput");
+
+        filter = input.value.toUpperCase();
+        table = document.getElementById("tableID");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "block";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+    function kliendikaartF() {
+        var checkBox = document.getElementById("kaartCheck");
+        var elms = document.querySelectorAll("[id='checkbox_appearer']");
+        console.log(elms)
+        if (checkBox.checked == true) {
+            for (var i = 0; i < elms.length; i++) {
+                elms[i].checked = true;
+            }
+        } else {
+            for (var i = 0; i < elms.length; i++) {
+                elms[i].checked = false;
+            }
+        }
+    }
+    var count = 0
+    function show_dissapear() {
+        var elmen = document.querySelectorAll("[id='checkbox_appearer']");
+        var elms = document.querySelectorAll("[id='checkbox_a']");
+        for (var i = 0; i < elmen.length; i++) {
+            elmen[i].checked = false;
+        }
+        if (count == 0) {
+            for (var i = 0; i < elms.length; i++) {
+
+                elms[i].style.display = "block"
+
+            }
+
+            count++
+        } else {
+            for (var i = 0; i < elms.length; i++) {
+
+                elms[i].style.display = "none"
+
+
+            }
+            count--
+
+        }
+    }
+    function deleteMoreRows() {
+        var elms = document.querySelectorAll("[id='checkbox_appearer']");
+        table = document.getElementById('tableID')
+        console.log(count)
+        if (count != 0) {
+            if (confirm("Are you sure you want to delete this record")) {
+                for (var i = 0; i < elms.length; i++) {
+
+                    if (elms[i].checked == true) {
+                        console.log(i)
+                        table.deleteRow(i + 1)
+                        elms[i] = elms[i] - 1
+                    }
+
+
+
+
+                }
+            }
+        }
+
+
+    }
+    var state = document.getElementById('txtst')
+    var year = document.getElementById('txtyear')
+    var students = document.getElementById('txtstudents')
+    var schools = document.getElementById('txtschools')
+    var dropout = document.getElementById('txtdrop')
+    var lit = document.getElementById('txtliteracy')
+    divid = document.getElementById('insertvaluesid')
+
+    var newcount = 0
+    function addmorevalues() {
+
+        if (newcount == 0) {
+            divid.style.display = "block"
+            state.value = ""
+            year.value = ""
+            students.value = ""
+            schools.value = ""
+            dropout.value = ""
+            lit.value = ""
+            newcount++
+        } else {
+            divid.style.display = "none"
+            newcount--
+        }
+
+    }
+
+    function CreateTable() {
+
+        if (state.value == "" || year.value == "" || students.value == "" || schools.value == "" || dropout.value == "" || lit.value == "") {
+            alert("please do not enter null values")
+
+        } else {
+            var table = document.getElementById("tableID");
+            var row = table.insertRow(2);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            var cell6 = row.insertCell(5);
+            var inserter = state.value;
+            var tocaser = inserter.toUpperCase(); 
+            cell1.innerHTML = tocaser;
+            cell2.innerHTML = year.value;
+            cell3.innerHTML = students.value;
+            cell4.innerHTML = schools.value;
+            cell5.innerHTML = dropout.value;
+            cell6.innerHTML = lit.value;
+            state.value = ""
+            year.value = ""
+            students.value = ""
+            schools.value = ""
+            dropout.value = ""
+            lit.value = ""
+        }
+
+
+
+
+    }
+    // function sortbyvalue() {
+    //     var select = document.getElementById('state_search');
+    //     var text = select.options[select.selectedIndex].text;
+    //     var select1 = document.getElementById('year_search');
+    //     var text1 =select1.options[select1.selectedIndex].text;
+    //     console.log(text1)
+        
+        
+    //     // Declare variables
+        
+    //     if (text == "none" && text1 == "none"){
+
+    //         for (i = 0; i < tr.length; i++) {
+    //         tr[i].style.display ="block"
+            
+        
+    //     }
+    
+
+    //     }else if (text1 == "none"){
+    //         filter = text.toUpperCase();
+    //     table = document.getElementById("tableID");
+    //     tr = table.getElementsByTagName("tr");
+    //     console.log(filter)
+
+    //     // Loop through all table rows, and hide those who don't match the search query
+    //     for (i = 0; i < tr.length; i++) {
+    //         td = tr[i].getElementsByTagName("td")[1];
+    //         if (td) {
+    //             txtValue = td.textContent || td.innerText;
+    //             if (txtValue.toUpperCase().indexOf(filter) > -1) {
+    //                 tr[i].style.display = "block";
+    //             } else {
+    //                 tr[i].style.display = "none";
+    //             }
+    //         }
+    //     }
+            
+    //     }
+    // }
+        
+        
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+</script>
+<body>
+    <div class="container">
+        <aside>
+        <div class="top">
+            <div class="logo">
+                <img src="lion_logo.png" >
+                <h2><span style="color: violet;">GOVT</span> OF <span style="color: orange;">IN</span><span style="color: blueviolet;">DI</span><span style="color: green;">A</span></h2>
+            </div>
+            <div id="close-btn" class="close">
+                <span class="material-icons-sharp">close</span>
+
+            </div>
+        </div>
+        <div class="sidebar">
+            <a href="home.html" >
+                <span class="material-icons-sharp">grid_view</span>
+                <h3>Home</h3>
+
+            </a>
+            <a href="messages.html">
+                <span class="material-icons-sharp">grid_view</span>
+                <h3>Messages </h3><span class="message-count">26</span>
+
+            </a>
+            <a href="viewdata.html" class="active">
+                <span class="material-icons-sharp">grid_view</span>
+                <h3>State_data</h3>
+
+            </a>
+            <a href="conseller.html">
+                <span class="material-icons-sharp">grid_view</span>
+                <h3>student_data</h3>
+
+            </a>
+            <a href="studentsdata.html">
+                <span class="material-icons-sharp">grid_view</span>
+                <h3>Institute_data</h3>
+
+            </a>
+
+
+
+            <a href="login.html">
+                <span class="material-icons-sharp">grid_view</span>
+                <h3>logout</h3>
+
+            </a>
+        </div>
+        
+
+        
+    
+</aside>
+<main>
+
+    <div class="buttonclass">
+        <button class="b1" onclick="addmorevalues()"><span style="font-size: 20px;">+</span>&ensp;Add
+            Record</button>
+        <button class="b2" onclick="deleteMoreRows()"><span style="font-size: 20px;">-</span>&ensp;Delete
+            Record</button>
+        <button class="b3" style="float: right;" onclick="show_dissapear()"><span
+                style="font-size: 20px;">≡</span>&ensp;Edit Table</button>
+    </div>
+    <p></p>
+    <div class="insertvalues" id="insertvaluesid">
+        <div>State &ensp;<input type="text" id="txtst" placeholder="enter state"></div>
+        <div>Year &ensp;<input type="text" id="txtyear" placeholder="enter year"></div>
+        <div>Students &ensp;<input type="text" id="txtstudents" placeholder="enter total no. of students"></div>
+        <div>Schools &ensp;<input type="text" id="txtschools" placeholder="enter total no. of schools"></div>
+        <div>drop out % &ensp;<input type="text" id="txtdrop" placeholder="enter drop out %"></div>
+        <div>literacy % &ensp;<input type="text" id="txtliteracy" placeholder="enter literacy %"></div>
+        &nbsp;<input type="button" value=" Add "
+            style="float: right;margin-right: 20px;background-color: #009879;color: white;padding: 7px;border-radius: 4px;border: none;"
+            onclick="CreateTable()">
+
+
+
+    </div>
+    <div class="table_container_class">
+
+
+
+        <!--HTML table with student data-->
+        <div class="inner-container">
+            <table id="tableID" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th id="checkbox_a" style="float: left;"><input type="checkbox" id="kaartCheck"
+                                onclick="kliendikaartF()"></th>
+                        <th>State&nbsp;</th>
+                        <th>Year&nbsp;</th>
+                        <th>Total no. of Students&nbsp;</th>
+                        <th>Total no.of Schools&nbsp;</th>
+                        <th>dropout rate(%)&nbsp;</th>
+                        
+
+
+                        <th>literacy rate(%)&nbsp;</th>
+
+                    </tr>
+                </thead>
+                <tbody align="center">
+                    <tr>
+                        <td id="checkbox_a" class="inner_checkbox">
+                            <div><input label="check" type="checkbox" id="checkbox_appearer" style="background-color: #e43a3a;"></div>
+                        </td>
+                        <td>ANDAMAN AND NICOBAR ISLANDS</td>
+                        <td>2010-2011</td>
+                        <td>60489</td>
+                        <td>328</td>
+                        <td>7.95</td>
+                        <td>84.63</td> </tr>
+            
+                        <tr><td id="checkbox_a" class="inner_checkbox">
+                            <div><input type="checkbox" id="checkbox_appearer"></div>
+                        </td>  
+                            <td>ANDHRA PRADESH</td>
+                        <td>2010-2011</td>
+                        <td>6458944</td>
+                        <td>49937</td>
+                        <td>6.89</td>
+                        <td>58.92</td> </tr>
+                        <tr><td id="checkbox_a" class="inner_checkbox">
+                            <div><input type="checkbox" id="checkbox_appearer"></div>
+                        </td>
+                              <td>ARUNACHAL PRADESH</td>
+                        <td>2010-2011</td>
+                        <td>235048</td>
+                        <td>2384</td>
+                        <td>21.39</td>
+                        <td>58.59</td> </tr>
+                        <tr> 
+                            <td id="checkbox_a" class="inner_checkbox">
+                                <div><input type="checkbox" id="checkbox_appearer"></div>
+                            </td> <td>ASSAM</td>
+                        <td>2010-2011</td>
+                        <td>5873807</td>
+                        <td>54878</td>
+                        <td>20.67</td>
+                        <td>76.89</td> </tr>
+                        <tr><td id="checkbox_a" class="inner_checkbox">
+                            <div><input type="checkbox" id="checkbox_appearer"></div>
+                        </td> 
+                            <td>BIHAR</td>
+                        <td>2010-2011</td>
+                        <td>1997478</td>
+                        <td>72278</td>
+                        <td>15.89</td>
+                        <td>58.98</td> 
+                    </tr>
+                    <tr><td id="checkbox_a" class="inner_checkbox">
+                        <div><input type="checkbox" id="checkbox_appearer"></div>
+                    </td> 
+                    <td>CHANDIGARH</td>
+                    <td>2010-2011</td>
+                    <td>78298</td>
+                    <td>211</td>
+                    <td>1.9</td>
+                    <td>70.56</td> 
+                    </tr>
+                <tr><td id="checkbox_a" class="inner_checkbox">
+                    <div><input type="checkbox" id="checkbox_appearer"></div>
+                </td> 
+                    <td>CHHATTISGARH</td>
+                <td>2010-2011</td>
+                <td>5072776</td>
+                <td>52678</td>
+                <td>10.9</td>
+                <td>79.89</td> 
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+                <td>DADRA AND NAGAR HAVELI</td>
+            <td>2010-2011</td>
+            <td>83782</td>
+            <td>322</td>
+            <td>10.89</td>
+            <td>70.56</td> 
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+                <td>DAMAN AND DIU</td>
+            <td>2010-2011</td>
+            <td>33873</td>
+            <td>322</td>
+            <td>10.89</td>
+            <td>70.56</td> 
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+                <td>DELHI</td>
+            <td>2010-2011</td>
+            <td>4017498</td>
+            <td>4497</td>
+            <td>6.98</td>
+            <td>85.87</td> 
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+                <td>GOA</td>
+            <td>2010-2011</td>
+            <td>79723</td>
+            <td>1024</td>
+            <td>6.8</td>
+            <td>82.4</td> 
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+                <td>GUJARAT</td>
+            <td>2010-2011</td>
+            <td>98572689</td>
+            <td>51844</td>
+            <td>12.4</td>
+            <td>75.3</td> 
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+                <td>HARYANA</td>
+            <td>2010-2011</td>
+            <td>5259829</td>
+            <td>19737</td>
+            <td>9.5</td>
+            <td>71.3</td> 
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+                <td>HIMACHAL PRADESH</td>
+            <td>2010-2011</td>
+            <td>1338279</td>
+            <td>13778</td>
+            <td>4.65</td>
+            <td>80.4</td> 
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+                <td>JAMMU AND KASHMIR</td>
+            <td>2010-2011</td>
+            <td>2139486</td>
+            <td>22375</td>
+            <td>10.45</td>
+            <td>71.5</td> 
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+                <td>JHARKHAND</td>
+            <td>2010-2011</td>
+            <td>5683872</td>
+            <td>42274</td>
+            <td>13.93</td>
+            <td>69.7</td> 
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+                <td>KARNATAKA</td>
+            <td>2010-2011</td>
+            <td>9798327</td>
+            <td>71849</td>
+            <td>10.4</td>
+            <td>70.3</td> 
+            </tr>
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>KERALA</td><!--state-->
+                <td>2010-2011</td><!--year-->
+                <td>2457147</td><!--total no.of of students-->
+                <td>16300</td><!--total no.of schools-->
+                <td>5.23</td><!--drop out per-->
+                <td>96.2</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>LADAKH</td><!--state-->
+                <td>2010-2011</td><!--year-->
+                <td>42150</td><!--total no.of of students-->
+                <td>990</td><!--total no.of schools-->
+                <td>1.30</td><!--drop out per-->
+                <td>64.28</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>LAKSHADWEEP</td><!--state-->
+                <td>2010-2011</td><!--year-->
+                <td>9745</td><!--total no.of of students-->
+                <td>39</td><!--total no.of schools-->
+                <td>4.23</td><!--drop out per-->
+                <td>92.28</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MADHYA PRADESH</td><!--state-->
+                <td>2010-2011</td><!--year-->
+                <td>9307419</td><!--total no.of of students-->
+                <td>122154</td><!--total no.of schools-->
+                <td>7.37</td><!--drop out per-->
+                <td>73.7</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MAHARASHTRA</td><!--state-->
+                <td>2010-2011</td><!--year-->
+                <td>9219365</td><!--total no.of of students-->
+                <td>104564</td><!--total no.of schools-->
+                <td>6.43</td><!--drop out per-->
+                <td>84.8</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MANIPUR</td><!--state-->
+                <td>2010-2011</td><!--year-->
+                <td>522702</td><!--total no.of of students-->
+                <td>4553</td><!--total no.of schools-->
+                <td>7.00</td><!--drop out per-->
+                <td>80.55</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MEGHALAYA</td><!--state-->
+                <td>2010-2011</td><!--year-->
+                <td>630265</td><!--total no.of of students-->
+                <td>14659</td><!--total no.of schools-->
+                <td>10.23</td><!--drop out per-->
+                <td>75.48</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MIZORAM</td><!--state-->
+                <td>2010-2011</td><!--year-->
+                <td>234646</td><!--total no.of of students-->
+                <td>3965</td><!--total no.of schools-->
+                <td>9.23</td><!--drop out per-->
+                <td>91.58</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>NAGALAND</td><!--state-->
+                <td>2010-2011</td><!--year-->
+                <td>410959</td><!--total no.of of students-->
+                <td>2519</td><!--total no.of schools-->
+                <td>8.27</td><!--drop out per-->
+                <td>79.11</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>ODISHA</td><!--state-->
+                <td>2010-2011</td><!--year-->
+                <td>6209830</td><!--total no.of of students-->
+                <td>62185</td><!--total no.of schools-->
+                <td>9.79</td><!--drop out per-->
+                <td>77.3</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>PUDUCHERRY</td><!--state-->
+                <td>2010-2011</td><!--year-->
+                <td>202997</td><!--total no.of of students-->
+                <td>741</td><!--total no.of schools-->
+                <td>2.98</td><!--drop out per-->
+                <td>86.55</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>PUNJAB</td><!--state-->
+                <td>2010-2011</td><!--year-->
+                <td>5732649</td><!--total no.of of students-->
+                <td>27695</td><!--total no.of schools-->
+                <td>1.53</td><!--drop out per-->
+                <td>86.55</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>RAJASTHAN</td><!--state-->
+                <td>2010-2011</td><!--year-->
+                <td>13663936</td><!--total no.of of students-->
+                <td>107076</td><!--total no.of schools-->
+                <td>6.57</td><!--drop out per-->
+                <td>69.7</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>SIKKIM</td><!--state-->
+                <td>2010-2011</td><!--year-->
+                <td>118709</td><!--total no.of of students-->
+                <td>1163</td><!--total no.of schools-->
+                <td>7.76</td><!--drop out per-->
+                <td>82.2</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>TAMIL NADU</td><!--state-->
+                <td>2010-2011</td><!--year-->
+                <td>9878820</td><!--total no.of of students-->
+                <td>57504</td><!--total no.of schools-->
+                <td>3.70</td><!--drop out per-->
+                <td>82.9</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>TELANGANA</td><!--state-->
+                <td>2010-2011</td><!--year-->
+                <td>6356244</td><!--total no.of of students-->
+                <td>42917</td><!--total no.of schools-->
+                <td>4.03</td><!--drop out per-->
+                <td>72.8</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>TRIPURA</td><!--state-->
+                <td>2010-2011</td><!--year-->
+                <td>645399</td><!--total no.of of students-->
+                <td>4724</td><!--total no.of schools-->
+                <td>10.73</td><!--drop out per-->
+                <td>87.75</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>UTTAR PRADESH</td><!--state-->
+                <td>2010-2011</td><!--year-->
+                <td>32298852</td><!--total no.of of students-->
+                <td>246911</td><!--total no.of schools-->
+                <td>6.40</td><!--drop out per-->
+                <td>73.0</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>UTTARAKHAND</td><!--state-->
+                <td>2010-2011</td><!--year-->
+                <td>1939683</td><!--total no.of of students-->
+                <td>20499</td><!--total no.of schools-->
+                <td>3.40</td><!--drop out per-->
+                <td>87.6</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>WEST BENGAL</td><!--state-->
+                <td>2010-2011</td><!--year-->
+                <td>14393539</td><!--total no.of of students-->
+                <td>94153</td><!--total no.of schools-->
+                <td>5.80</td><!--drop out per-->
+                <td>80.5</td><!--literacy per-->          
+            </tr>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+                <td>ANDAMAN AND NICOBAR ISLANDS</td>
+            <td>2011-2012</td>
+            <td>62078</td>
+            <td>343</td>
+            <td>7.91</td>
+            <td>85.45</td> 
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td>  
+                <td>ANDHRA PRADESH</td>
+            <td>2011-2012</td>
+            <td>6586209</td>
+            <td>51992</td>
+            <td>6.99</td>
+            <td>58.99</td> </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td>
+                  <td>ARUNACHAL PRADESH</td>
+            <td>2011-2012</td>
+            <td>248764</td>
+            <td>2483</td>
+            <td>21.34</td>
+            <td>59.36</td> </tr>
+            <tr> 
+                <td id="checkbox_a" class="inner_checkbox">
+                    <div><input type="checkbox" id="checkbox_appearer"></div>
+                </td> <td>ASSAM</td>
+            <td>2011-2012</td>
+            <td>5897365</td>
+            <td>55827</td>
+            <td>19.89</td>
+            <td>77.88</td> </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+                <td>BIHAR</td>
+            <td>2011-2012</td>
+            <td>2018398</td>
+            <td>75628</td>
+            <td>15.03</td>
+            <td>59.30</td> 
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>CHANDIGARH</td>
+            <td>2011-2012</td>
+            <td>79826</td>
+            <td>216</td>
+            <td>1.9</td>
+            <td>72.90</td> 
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>CHHATTISGARH</td>
+            <td>2011-2012</td>
+            <td>5157382</td>
+            <td>52987</td>
+            <td>10.5</td>
+            <td>80.92</td> 
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>DADRA AND NAGAR HAVELI</td>
+            <td>2011-2012</td>
+            <td>83973</td>
+            <td>340</td>
+            <td>10.33</td>
+            <td>71.03</td> 
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>DAMAN AND DIU</td>
+            <td>2011-2012</td>
+            <td>33976</td>
+            <td>340</td>
+            <td>10.33</td>
+            <td>71.03</td> 
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>DELHI</td>
+            <td>2011-2012</td>
+            <td>4092679</td>
+            <td>4686</td>
+            <td>6.87</td>
+            <td>85.67</td> 
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>GOA</td>
+            <td>2011-2012</td>
+            <td>80736</td>
+            <td>1079</td>
+            <td>6.5</td>
+            <td>82.4</td> 
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>GUJARAT</td>
+            <td>2011-2012</td>
+            <td>98682793</td>
+            <td>51973</td>
+            <td>12.98</td>
+            <td>75.9</td> 
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>HARYANA</td>
+            <td>2011-2012</td>
+            <td> 5289247 </td>
+            <td> 19973 </td>
+            <td> 9.03 </td>
+            <td> 71.9 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>HIMACHAL PRADESH</td>
+            <td>2011-2012</td>
+            <td> 1359279 </td>
+            <td> 13996 </td>
+            <td> 4.56 </td>
+            <td> 80.9 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>JAMMU AND KASHMIR</td>
+            <td>2011-2012</td>
+            <td> 2157324 </td>
+            <td> 22974 </td>
+            <td> 10.21 </td>
+            <td> 71.9 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>JHARKHAND</td>
+            <td>2011-2012</td>
+            <td> 5694742 </td>
+            <td> 42974 </td>
+            <td> 13.2 </td>
+            <td> 69.9 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>KARNATAKA</td>
+            <td>2011-2012</td>
+            <td> 9828468 </td>
+            <td> 71973 </td>
+            <td> 10.01 </td>
+            <td> 71.5 </td>
+            
+            </tr>
+            
+            
+            
+            
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>KERALA</td><!--state-->
+                <td>2011-2012</td><!--year-->
+                <td>2547417</td><!--total no.of of students-->
+                <td>16492</td><!--total no.of schools-->
+                <td>2.93</td><!--drop out per-->
+                <td>97.0</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>LADAKH</td><!--state-->
+                <td>2011-2012</td><!--year-->
+                <td>46207</td><!--total no.of of students-->
+                <td>994</td><!--total no.of schools-->
+                <td>1.22</td><!--drop out per-->
+                <td>65.30</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>LAKSHADWEEP</td><!--state-->
+                <td>2011-2012</td><!--year-->
+                <td>10725</td><!--total no.of of students-->
+                <td>45</td><!--total no.of schools-->
+                <td>3.22</td><!--drop out per-->
+                <td>90.62</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MADHYA PRADESH</td><!--state-->
+                <td>2011-2012</td><!--year-->
+                <td>10407419</td><!--total no.of of students-->
+                <td>133196</td><!--total no.of schools-->
+                <td>8.98</td><!--drop out per-->
+                <td>72.77</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MAHARASHTRA</td><!--state-->
+                <td>2011-2012</td><!--year-->
+                <td>9309630</td><!--total no.of of students-->
+                <td>110845</td><!--total no.of schools-->
+                <td>6.32</td><!--drop out per-->
+                <td>87.62</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MANIPUR</td><!--state-->
+                <td>2011-2012</td><!--year-->
+                <td>562702</td><!--total no.of of students-->
+                <td>4765</td><!--total no.of schools-->
+                <td>7.23</td><!--drop out per-->
+                <td>81.85</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MEGHALAYA</td><!--state-->
+                <td>2011-2012</td><!--year-->
+                <td>641435</td><!--total no.of of students-->
+                <td>14710</td><!--total no.of schools-->
+                <td>11.65</td><!--drop out per-->
+                <td>77.48</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MIZORAM</td><!--state-->
+                <td>2011-2012</td><!--year-->
+                <td>249646</td><!--total no.of of students-->
+                <td>4065</td><!--total no.of schools-->
+                <td>11.23</td><!--drop out per-->
+                <td>89.35</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>NAGALAND</td><!--state-->
+                <td>2011-2012</td><!--year-->
+                <td>420959</td><!--total no.of of students-->
+                <td>2632</td><!--total no.of schools-->
+                <td>9.69</td><!--drop out per-->
+                <td>81.65</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>ODISHA</td><!--state-->
+                <td>2011-2012</td><!--year-->
+                <td>6809830</td><!--total no.of of students-->
+                <td>63965</td><!--total no.of schools-->
+                <td>9.63</td><!--drop out per-->
+                <td>77.37</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>PUDUCHERRY</td><!--state-->
+                <td>2011-2012</td><!--year-->
+                <td>213997</td><!--total no.of of students-->
+                <td>801</td><!--total no.of schools-->
+                <td>3.00</td><!--drop out per-->
+                <td>87.62</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>PUNJAB</td><!--state-->
+                <td>2011-2012</td><!--year-->
+                <td>5832649</td><!--total no.of of students-->
+                <td>28621</td><!--total no.of schools-->
+                <td>1.99</td><!--drop out per-->
+                <td>85.32</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>RAJASTHAN</td><!--state-->
+                <td>2011-2012</td><!--year-->
+                <td>14763936</td><!--total no.of of students-->
+                <td>107126</td><!--total no.of schools-->
+                <td>7.65</td><!--drop out per-->
+                <td>70.64</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>SIKKIM</td><!--state-->
+                <td>2011-2012</td><!--year-->
+                <td>128709</td><!--total no.of of students-->
+                <td>1212</td><!--total no.of schools-->
+                <td>8.62</td><!--drop out per-->
+                <td>81.2</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>TAMIL NADU</td><!--state-->
+                <td>2011-2012</td><!--year-->
+                <td>10008820</td><!--total no.of of students-->
+                <td>59125</td><!--total no.of schools-->
+                <td>4.65</td><!--drop out per-->
+                <td>84.1</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>TELANGANA</td><!--state-->
+                <td>2011-2012</td><!--year-->
+                <td>6422244</td><!--total no.of of students-->
+                <td>43215</td><!--total no.of schools-->
+                <td>3.98</td><!--drop out per-->
+                <td>70.65</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>TRIPURA</td><!--state-->
+                <td>2011-2012</td><!--year-->
+                <td>651399</td><!--total no.of of students-->
+                <td>4899</td><!--total no.of schools-->
+                <td>9.36</td><!--drop out per-->
+                <td>89.65</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>UTTAR PRADESH</td><!--state-->
+                <td>2011-2012</td><!--year-->
+                <td>34926852</td><!--total no.of of students-->
+                <td>256523</td><!--total no.of schools-->
+                <td>7.56</td><!--drop out per-->
+                <td>76.0</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>UTTARAKHAND</td><!--state-->
+                <td>2011-2012</td><!--year-->
+                <td>2039683</td><!--total no.of of students-->
+                <td>23196</td><!--total no.of schools-->
+                <td>6.65</td><!--drop out per-->
+                <td>86.6</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>WEST BENGAL</td><!--state-->
+                <td>2011-2012</td><!--year-->
+                <td>15393539</td><!--total no.of of students-->
+                <td>95503</td><!--total no.of schools-->
+                <td>4.72</td><!--drop out per-->
+                <td>82.3</td><!--literacy per-->          
+            </tr>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+                <td>ANDAMAN AND NICOBAR ISLANDS</td>
+            <td>2012-2013</td>
+            <td> 65362 </td>
+            <td> 355 </td>
+            <td> 8.47 </td>
+            <td> 85.92 </td>
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td>  
+                <td>ANDHRA PRADESH</td>
+            <td>2012-2013</td>
+            <td> 6720465 </td>
+            <td> 54616 </td>
+            <td> 6.47 </td>
+            <td> 59.50 </td> </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td>
+                  <td>ARUNACHAL PRADESH</td>
+            <td>2012-2013</td>
+            <td> 247849 </td>
+            <td> 2599 </td>
+            <td> 20.56 </td>
+            <td> 59.95 </td> </tr>
+            <tr> 
+                <td id="checkbox_a" class="inner_checkbox">
+                    <div><input type="checkbox" id="checkbox_appearer"></div>
+                </td> <td>ASSAM</td>
+            <td>2012-2013</td>
+            <td> 5982782 </td>
+            <td> 56782 </td>
+            <td> 18.67 </td>
+            <td> 78.67 </td>
+             </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+                <td>BIHAR</td>
+            <td>2012-2013</td>
+            <td> 2038789 </td>
+            <td> 79656 </td>
+            <td> 14.78 </td>
+            <td> 61.56 </td>
+             
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>CHANDIGARH</td>
+            <td>2012-2013</td>
+            <td> 80287 </td>
+            <td> 218 </td>
+            <td> 1.8 </td>
+            <td> 74.98 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>CHHATTISGARH</td>
+            <td>2012-2013</td>
+            <td> 5278287 </td>
+            <td> 53869 </td>
+            <td> 9.9 </td>
+            <td> 81.76 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>DADRA AND NAGAR HAVELI</td>
+            <td>2012-2013</td>
+            <td> 84082 </td>
+            <td> 356 </td>
+            <td> 9.97 </td>
+            <td> 73.98 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>DAMAN AND DIU</td>
+            <td>2012-2013</td>
+            <td> 34971 </td>
+            <td> 356 </td>
+            <td> 9.97 </td>
+            <td> 73.98 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>DELHI</td>
+            <td>2012-2013</td>
+            <td> 4174780 </td>
+            <td> 4894 </td>
+            <td> 6.22 </td>
+            <td> 85.97 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>GOA</td>
+            <td>2012-2013</td>
+            <td> 80973 </td>
+            <td> 1127 </td>
+            <td> 6.1 </td>
+            <td> 83.5 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>GUJARAT</td>
+            <td>2012-2013</td>
+            <td> 98736797 </td>
+            <td> 52136 </td>
+            <td> 11.87 </td>
+            <td> 76.8 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>HARYANA</td>
+            <td>2012-2013</td>
+            <td> 5307316 </td>
+            <td> 20837 </td>
+            <td> 8.96 </td>
+            <td> 72.6 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>HIMACHAL PRADESH</td>
+            <td>2012-2013</td>
+            <td> 1378479 </td>
+            <td> 14284 </td>
+            <td> 4.78 </td>
+            <td> 81.4 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>JAMMU AND KASHMIR</td>
+            <td>2012-2013</td>
+            <td> 2178237 </td>
+            <td> 23868 </td>
+            <td> 9.96 </td>
+            <td> 72.4 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>JHARKHAND</td>
+            <td>2012-2013</td>
+            <td> 5765236 </td>
+            <td> 43072 </td>
+            <td> 12.8 </td>
+            <td> 70.3 </td>
+             
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>KARNATAKA</td>
+            <td>2012-2013</td>
+            <td> 9858726 </td>
+            <td> 72076 </td>
+            <td> 9.7 </td>
+            <td> 71.9 </td>
+            
+            </tr>
+            
+            
+            
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>KERALA</td><!--state-->
+                <td>2012-2013</td><!--year-->
+                <td>2547956</td><!--total no.of of students-->
+                <td>16230</td><!--total no.of schools-->
+                <td>3.93</td><!--drop out per-->
+                <td>96.0</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>LADAKH</td><!--state-->
+                <td>2012-2013</td><!--year-->
+                <td>46407</td><!--total no.of of students-->
+                <td>1003</td><!--total no.of schools-->
+                <td>1.96</td><!--drop out per-->
+                <td>69.30</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>LAKSHADWEEP</td><!--state-->
+                <td>2012-2013</td><!--year-->
+                <td>11025</td><!--total no.of of students-->
+                <td>60</td><!--total no.of schools-->
+                <td>3.19</td><!--drop out per-->
+                <td>89.62</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MADHYA PRADESH</td><!--state-->
+                <td>2012-2013</td><!--year-->
+                <td>9907419</td><!--total no.of of students-->
+                <td>132096</td><!--total no.of schools-->
+                <td>10.00</td><!--drop out per-->
+                <td>71.77</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MAHARASHTRA</td><!--state-->
+                <td>2012-2013</td><!--year-->
+                <td>9109630</td><!--total no.of of students-->
+                <td>110922</td><!--total no.of schools-->
+                <td>9.32</td><!--drop out per-->
+                <td>85.62</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MANIPUR</td><!--state-->
+                <td>2012-2013</td><!--year-->
+                <td>542702</td><!--total no.of of students-->
+                <td>4765</td><!--total no.of schools-->
+                <td>8.23</td><!--drop out per-->
+                <td>80.85</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MEGHALAYA</td><!--state-->
+                <td>2012-2013</td><!--year-->
+                <td>641735</td><!--total no.of of students-->
+                <td>14810</td><!--total no.of schools-->
+                <td>10.65</td><!--drop out per-->
+                <td>79.48</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MIZORAM</td><!--state-->
+                <td>2012-2013</td><!--year-->
+                <td>247446</td><!--total no.of of students-->
+                <td>4050</td><!--total no.of schools-->
+                <td>10.23</td><!--drop out per-->
+                <td>90.35</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>NAGALAND</td><!--state-->
+                <td>2012-2013</td><!--year-->
+                <td>420759</td><!--total no.of of students-->
+                <td>2635</td><!--total no.of schools-->
+                <td>9.99</td><!--drop out per-->
+                <td>80.65</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>ODISHA</td><!--state-->
+                <td>2012-2013</td><!--year-->
+                <td>6509830</td><!--total no.of of students-->
+                <td>63565</td><!--total no.of schools-->
+                <td>10.63</td><!--drop out per-->
+                <td>79.3</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>PUDUCHERRY</td><!--state-->
+                <td>2012-2013</td><!--year-->
+                <td>203997</td><!--total no.of of students-->
+                <td>789</td><!--total no.of schools-->
+                <td>3.59</td><!--drop out per-->
+                <td>86.62</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>PUNJAB</td><!--state-->
+                <td>2012-2013</td><!--year-->
+                <td>5432649</td><!--total no.of of students-->
+                <td>27621</td><!--total no.of schools-->
+                <td>4.99</td><!--drop out per-->
+                <td>86.32</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>RAJASTHAN</td><!--state-->
+                <td>2012-2013</td><!--year-->
+                <td>14563936</td><!--total no.of of students-->
+                <td>105126</td><!--total no.of schools-->
+                <td>8.65</td><!--drop out per-->
+                <td>70.64</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>SIKKIM</td><!--state-->
+                <td>2012-2013</td><!--year-->
+                <td>127709</td><!--total no.of of students-->
+                <td>1200</td><!--total no.of schools-->
+                <td>9.12</td><!--drop out per-->
+                <td>80.2</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>TAMIL NADU</td><!--state-->
+                <td>2012-2013</td><!--year-->
+                <td>9008820</td><!--total no.of of students-->
+                <td>59025</td><!--total no.of schools-->
+                <td>5.12</td><!--drop out per-->
+                <td>85.1</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>TELANGANA</td><!--state-->
+                <td>2012-2013</td><!--year-->
+                <td>6322244</td><!--total no.of of students-->
+                <td>43202</td><!--total no.of schools-->
+                <td>4.98</td><!--drop out per-->
+                <td>72.65</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>TRIPURA</td><!--state-->
+                <td>2012-2013</td><!--year-->
+                <td>651977</td><!--total no.of of students-->
+                <td>4912</td><!--total no.of schools-->
+                <td>9.96</td><!--drop out per-->
+                <td>84.65</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>UTTAR PRADESH</td><!--state-->
+                <td>2012-2013</td><!--year-->
+                <td>33926852</td><!--total no.of of students-->
+                <td>224523</td><!--total no.of schools-->
+                <td>9.13</td><!--drop out per-->
+                <td>75.0</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>UTTARAKHAND</td><!--state-->
+                <td>2012-2013</td><!--year-->
+                <td>2022683</td><!--total no.of of students-->
+                <td>23236</td><!--total no.of schools-->
+                <td>7.59</td><!--drop out per-->
+                <td>87.6</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>WEST BENGAL</td><!--state-->
+                <td>2012-2013</td><!--year-->
+                <td>15394589</td><!--total no.of of students-->
+                <td>95523</td><!--total no.of schools-->
+                <td>5.56</td><!--drop out per-->
+                <td>83.3</td><!--literacy per-->          
+            </tr>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            <td>ANDAMAN AND NICOBAR ISLANDS</td>
+            <td>2013-2014</td>
+            <td> 65302 </td>
+            <td> 367 </td>
+            <td> 7.03 </td>
+            <td> 86.97 </td>
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td>  
+                <td>ANDHRA PRADESH</td>
+            <td>2013-2014</td>
+            <td> 6729749 </td>
+            <td> 55639 </td>
+            <td> 6.03 </td>
+            <td> 60.34 </td></tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td>
+                  <td>ARUNACHAL PRADESH</td>
+            <td>2013-2014</td>
+            <td> 6026742 </td>
+            <td> 57927 </td>
+            <td> 17.55 </td>
+            <td> 79.57 </td>
+             </tr>
+            <tr> 
+                <td id="checkbox_a" class="inner_checkbox">
+                    <div><input type="checkbox" id="checkbox_appearer"></div>
+                </td> <td>ASSAM</td>
+            <td>2013-2014</td>
+            <td> 6099276 </td>
+            <td> 58729 </td>
+            <td> 16.98 </td>
+            <td> 80.88 </td> </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+                <td>BIHAR</td>
+            <td>2013-2014</td>
+            <td> 2093782 </td>
+            <td> 80617 </td>
+            <td> 14.98 </td>
+            <td> 62.89 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>CHANDIGARH</td>
+            <td>2013-2014</td>
+            <td> 86892 </td>
+            <td> 223 </td>
+            <td> 1.9 </td>
+            <td> 74.32 </td>
+             
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>CHHATTISGARH</td>
+            <td>2013-2014</td>
+            <td> 5397885 </td>
+            <td> 53962 </td>
+            <td> 9.5 </td>
+            <td> 82.87 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>DADRA AND NAGAR HAVELI</td>
+            <td>2013-2014</td>
+            <td> 84682 </td>
+            <td> 376 </td>
+            <td> 9.34 </td>
+            <td> 74.30 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>DAMAN AND DIU</td>
+            <td>2013-2014</td>
+            <td> 35816 </td>
+            <td> 376 </td>
+            <td> 9.34 </td>
+            <td> 74.30 </td>
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>DELHI</td>
+            <td>2013-2014</td>
+            <td> 4180289 </td>
+            <td> 4972 </td>
+            <td> 5.49 </td>
+            <td> 86.02 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>GOA</td>
+            <td>2013-2014</td>
+            <td> 81578 </td>
+            <td> 1198 </td>
+            <td> 5.4 </td>
+            <td> 83.1 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>GUJARAT</td>
+            <td>2013-2014</td>
+            <td> 98872794 </td>
+            <td> 52482 </td>
+            <td> 11.6 </td>
+            <td> 76.93 </td>
+             
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>HARYANA</td>
+            <td>2013-2014</td>
+            <td> 5349427 </td>
+            <td> 21336 </td>
+            <td> 8.72 </td>
+            <td> 73.7 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>HIMACHAL PRADESH</td>
+            <td>2013-2014</td>
+            <td> 1389278 </td>
+            <td> 14784 </td>
+            <td> 4.01 </td>
+            <td> 81.5 </td>
+             
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>JAMMU AND KASHMIR</td>
+            <td>2013-2014</td>
+            <td> 2298648 </td>
+            <td> 23976 </td>
+            <td> 9.85 </td>
+            <td> 72.7 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>JHARKHAND</td>
+            <td>2013-2014</td>
+            <td> 5797257 </td>
+            <td> 43474 </td>
+            <td> 12.56 </td>
+            <td> 70.6 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>KARNATAKA</td>
+            <td>2013-2014</td>
+            <td> 9898268 </td>
+            <td> 72972 </td>
+            <td> 9.9 </td>
+            <td> 71.2 </td>
+             
+            </tr>
+            
+            
+            
+            
+            
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>KERALA</td><!--state-->
+                <td>2013-2014</td><!--year-->
+                <td>2548596</td><!--total no.of of students-->
+                <td>16246</td><!--total no.of schools-->
+                <td>3.00</td><!--drop out per-->
+                <td>96.3</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>LADAKH</td><!--state-->
+                <td>2013-2014</td><!--year-->
+                <td>46523</td><!--total no.of of students-->
+                <td>1000</td><!--total no.of schools-->
+                <td>1.52</td><!--drop out per-->
+                <td>75.30</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>LAKSHADWEEP</td><!--state-->
+                <td>2013-2014</td><!--year-->
+                <td>10155</td><!--total no.of of students-->
+                <td>82</td><!--total no.of schools-->
+                <td>3.03</td><!--drop out per-->
+                <td>90.62</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MADHYA PRADESH</td><!--state-->
+                <td>2013-2014</td><!--year-->
+                <td>9907956</td><!--total no.of of students-->
+                <td>132102</td><!--total no.of schools-->
+                <td>9.63</td><!--drop out per-->
+                <td>74.77</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MAHARASHTRA</td><!--state-->
+                <td>2013-2014</td><!--year-->
+                <td>9110396</td><!--total no.of of students-->
+                <td>110950</td><!--total no.of schools-->
+                <td>8.32</td><!--drop out per-->
+                <td>87.62</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MANIPUR</td><!--state-->
+                <td>2013-2014</td><!--year-->
+                <td>543200</td><!--total no.of of students-->
+                <td>4784</td><!--total no.of schools-->
+                <td>8.03</td><!--drop out per-->
+                <td>81.85</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MEGHALAYA</td><!--state-->
+                <td>2013-2014</td><!--year-->
+                <td>641985</td><!--total no.of of students-->
+                <td>14854</td><!--total no.of schools-->
+                <td>9.65</td><!--drop out per-->
+                <td>80.48</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MIZORAM</td><!--state-->
+                <td>2013-2014</td><!--year-->
+                <td>247520</td><!--total no.of of students-->
+                <td>4060</td><!--total no.of schools-->
+                <td>9.32</td><!--drop out per-->
+                <td>91.35</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>NAGALAND</td><!--state-->
+                <td>2013-2014</td><!--year-->
+                <td>421524</td><!--total no.of of students-->
+                <td>2650</td><!--total no.of schools-->
+                <td>10.12</td><!--drop out per-->
+                <td>79.65</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>ODISHA</td><!--state-->
+                <td>2013-2014</td><!--year-->
+                <td>6509978</td><!--total no.of of students-->
+                <td>63549</td><!--total no.of schools-->
+                <td>9.35</td><!--drop out per-->
+                <td>80.26</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>PUDUCHERRY</td><!--state-->
+                <td>2013-2014</td><!--year-->
+                <td>204015</td><!--total no.of of students-->
+                <td>792</td><!--total no.of schools-->
+                <td>3.92</td><!--drop out per-->
+                <td>86.50</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>PUNJAB</td><!--state-->
+                <td>2013-2014</td><!--year-->
+                <td>5432789</td><!--total no.of of students-->
+                <td>27650</td><!--total no.of schools-->
+                <td>4.25</td><!--drop out per-->
+                <td>87.32</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>RAJASTHAN</td><!--state-->
+                <td>2013-2014</td><!--year-->
+                <td>14563989</td><!--total no.of of students-->
+                <td>105115</td><!--total no.of schools-->
+                <td>8.46</td><!--drop out per-->
+                <td>72.64</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>SIKKIM</td><!--state-->
+                <td>2013-2014</td><!--year-->
+                <td>127623</td><!--total no.of of students-->
+                <td>1205</td><!--total no.of schools-->
+                <td>8.12</td><!--drop out per-->
+                <td>82.2</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>TAMIL NADU</td><!--state-->
+                <td>2013-2014</td><!--year-->
+                <td>9008989</td><!--total no.of of students-->
+                <td>59035</td><!--total no.of schools-->
+                <td>4.12</td><!--drop out per-->
+                <td>87.1</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>TELANGANA</td><!--state-->
+                <td>2013-2014</td><!--year-->
+                <td>6322366</td><!--total no.of of students-->
+                <td>43205</td><!--total no.of schools-->
+                <td>5.12</td><!--drop out per-->
+                <td>73.16</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>TRIPURA</td><!--state-->
+                <td>2013-2014</td><!--year-->
+                <td>652310</td><!--total no.of of students-->
+                <td>4919</td><!--total no.of schools-->
+                <td>8.12</td><!--drop out per-->
+                <td>87.25</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>UTTAR PRADESH</td><!--state-->
+                <td>2013-2014</td><!--year-->
+                <td>33925846</td><!--total no.of of students-->
+                <td>224513</td><!--total no.of schools-->
+                <td>10.32</td><!--drop out per-->
+                <td>73.46</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>UTTARAKHAND</td><!--state-->
+                <td>2013-2014</td><!--year-->
+                <td>2022789</td><!--total no.of of students-->
+                <td>23240</td><!--total no.of schools-->
+                <td>7.46</td><!--drop out per-->
+                <td>88.1</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>WEST BENGAL</td><!--state-->
+                <td>2013-2014</td><!--year-->
+                <td>15395987</td><!--total no.of of students-->
+                <td>95531</td><!--total no.of schools-->
+                <td>6.12</td><!--drop out per-->
+                <td>84.56</td><!--literacy per-->          
+            </tr>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            <td>ANDAMAN AND NICOBAR ISLANDS</td>
+            <td>2014-2015</td>
+            <td> 67358 </td>
+            <td> 370 </td>
+            <td> 6.94 </td>
+            <td> 84.87 </td>
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td>  
+                <td>ANDHRA PRADESH</td>
+            <td>2014-2015</td>
+            <td> 6825630 </td>
+            <td> 56628 </td>
+            <td> 5.98 </td>
+            <td> 62.56 </td></tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td>
+                  <td>ARUNACHAL PRADESH</td>
+            <td>2014-2015</td>
+            <td> 273498 </td>
+            <td> 2682 </td>
+            <td> 18.99 </td>
+            <td> 62.48 </td> </tr>
+            <tr> 
+                <td id="checkbox_a" class="inner_checkbox">
+                    <div><input type="checkbox" id="checkbox_appearer"></div>
+                </td> <td>ASSAM</td>
+            <td>2014-2015</td>
+            <td> 6198202</td>
+            <td> 60725 </td>
+            <td> 15.03 </td>
+            <td> 81.34 </td>
+             </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+                <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+                <td>BIHAR</td>
+            <td>2014-2015</td>
+            <td> 2106767 </td>
+            <td> 85897 </td>
+            <td> 13.67 </td>
+            <td> 63.98 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>CHANDIGARH</td>
+            <td>2014-2015</td>
+            <td> 89266 </td>
+            <td> 225 </td>
+            <td> 1.8 </td>
+            <td> 75.46 </td>
+             
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>CHHATTISGARH</td>
+            <td>2014-2015</td>
+            <td> 5462863 </td>
+            <td> 54387 </td>
+            <td> 8.7 </td>
+            <td> 82.94 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>DADRA AND NAGAR HAVELI</td>
+            <td>2014-2015</td>
+            <td> 84762 </td>
+            <td> 396 </td>
+            <td> 10.30 </td>
+            <td> 74.98 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>DAMAN AND DIU</td>
+            <td>2014-2015</td>
+            <td> 35997 </td>
+            <td> 396 </td>
+            <td> 10.30 </td>
+            <td> 74.98 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>DELHI</td>
+            <td>2014-2015</td>
+            <td> 4190716 </td>
+            <td> 5082 </td>
+            <td> 5.12 </td>
+            <td> 86.54 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>GOA</td>
+            <td>2014-2015</td>
+            <td> 81997 </td>
+            <td> 1257 </td>
+            <td> 5.1 </td>
+            <td> 84.01 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>GUJARAT</td>
+            <td>2014-2015</td>
+            <td> 98983785 </td>
+            <td> 52739 </td>
+            <td> 11.01 </td>
+            <td> 78.4 </td>
+             
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>HARYANA</td>
+            <td>2014-2015</td>
+            <td> 5398427 </td>
+            <td> 21973 </td>
+            <td> 8.01 </td>
+            <td> 73.9 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>HIMACHAL PRADESH</td>
+            <td>2014-2015</td>
+            <td> 1398736 </td>
+            <td> 15028 </td>
+            <td> 3.5 </td>
+            <td> 82.01 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>JAMMU AND KASHMIR</td>
+            <td>2014-2015</td>
+            <td> 2387244 </td>
+            <td> 24869 </td>
+            <td> 9.43 </td>
+            <td> 73.8 </td>
+            
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>JHARKHAND</td>
+            <td>2014-2015</td>
+            <td> 5826487 </td>
+            <td> 43976 </td>
+            <td> 12.2 </td>
+            <td> 71.4 </td>
+             
+            </tr>
+            <tr><td id="checkbox_a" class="inner_checkbox">
+            <div><input type="checkbox" id="checkbox_appearer"></div>
+            </td> 
+            <td>KARNATAKA</td>
+            <td>2014-2015</td>
+            <td> 9899824 </td>
+            <td> 73547 </td>
+            <td> 9.2 </td>
+            <td> 72.5 </td>
+             
+            </tr>
+            
+            
+            
+            
+            
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>KERALA</td><!--state-->
+                <td>2014-2015</td><!--year-->
+                <td>3547417</td><!--total no.of of students-->
+                <td>16481</td><!--total no.of schools-->
+                <td>2.63</td><!--drop out per-->
+                <td>97.0</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>LADAKH</td><!--state-->
+                <td>2014-2015</td><!--year-->
+                <td>56207</td><!--total no.of of students-->
+                <td>1056</td><!--total no.of schools-->
+                <td>5.23</td><!--drop out per-->
+                <td>74.23</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>LAKSHADWEEP</td><!--state-->
+                <td>2014-2015</td><!--year-->
+                <td>12606</td><!--total no.of of students-->
+                <td>45</td><!--total no.of schools-->
+                <td>2.23</td><!--drop out per-->
+                <td>89.23</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MADHYA PRADESH</td><!--state-->
+                <td>2014-2015</td><!--year-->
+                <td>16407419</td><!--total no.of of students-->
+                <td>133271</td><!--total no.of schools-->
+                <td>9.37</td><!--drop out per-->
+                <td>75.7</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MAHARASHTRA</td><!--state-->
+                <td>2014-2015</td><!--year-->
+                <td>12309630</td><!--total no.of of students-->
+                <td>110114</td><!--total no.of schools-->
+                <td>5.43</td><!--drop out per-->
+                <td>86.86</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MANIPUR</td><!--state-->
+                <td>2014-2015</td><!--year-->
+                <td>662702</td><!--total no.of of students-->
+                <td>4653</td><!--total no.of schools-->
+                <td>7.33</td><!--drop out per-->
+                <td>80.85</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MEGHALAYA</td><!--state-->
+                <td>2014-2015</td><!--year-->
+                <td>741435</td><!--total no.of of students-->
+                <td>14694</td><!--total no.of schools-->
+                <td>12.40</td><!--drop out per-->
+                <td>81.48</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>MIZORAM</td><!--state-->
+                <td>2014-2015</td><!--year-->
+                <td>279646</td><!--total no.of of students-->
+                <td>3925</td><!--total no.of schools-->
+                <td>10.23</td><!--drop out per-->
+                <td>90.28</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>NAGALAND</td><!--state-->
+                <td>2014-2015</td><!--year-->
+                <td>460959</td><!--total no.of of students-->
+                <td>2719</td><!--total no.of schools-->
+                <td>10.27</td><!--drop out per-->
+                <td>76.11</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>ODISHA</td><!--state-->
+                <td>2014-2015</td><!--year-->
+                <td>7009830</td><!--total no.of of students-->
+                <td>64185</td><!--total no.of schools-->
+                <td>9.63</td><!--drop out per-->
+                <td>81.3</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>PUDUCHERRY</td><!--state-->
+                <td>2014-2015</td><!--year-->
+                <td>243997</td><!--total no.of of students-->
+                <td>741</td><!--total no.of schools-->
+                <td>2.63</td><!--drop out per-->
+                <td>87.55</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>PUNJAB</td><!--state-->
+                <td>2014-2015</td><!--year-->
+                <td>6032649</td><!--total no.of of students-->
+                <td>28695</td><!--total no.of schools-->
+                <td>0.53</td><!--drop out per-->
+                <td>86.96</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>RAJASTHAN</td><!--state-->
+                <td>2014-2015</td><!--year-->
+                <td>17763936</td><!--total no.of of students-->
+                <td>107376</td><!--total no.of schools-->
+                <td>5.57</td><!--drop out per-->
+                <td>73.20</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>SIKKIM</td><!--state-->
+                <td>2014-2015</td><!--year-->
+                <td>138709</td><!--total no.of of students-->
+                <td>1263</td><!--total no.of schools-->
+                <td>7.73</td><!--drop out per-->
+                <td>81.2</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>TAMIL NADU</td><!--state-->
+                <td>2014-2015</td><!--year-->
+                <td>11008820</td><!--total no.of of students-->
+                <td>58904</td><!--total no.of schools-->
+                <td>3.70</td><!--drop out per-->
+                <td>89.1</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>TELANGANA</td><!--state-->
+                <td>2014-2015</td><!--year-->
+                <td>6822244</td><!--total no.of of students-->
+                <td>42917</td><!--total no.of schools-->
+                <td>4.13</td><!--drop out per-->
+                <td>74.8</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>TRIPURA</td><!--state-->
+                <td>2014-2015</td><!--year-->
+                <td>691399</td><!--total no.of of students-->
+                <td>4934</td><!--total no.of schools-->
+                <td>10.73</td><!--drop out per-->
+                <td>86.52</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>UTTAR PRADESH</td><!--state-->
+                <td>2014-2015</td><!--year-->
+                <td>38926852</td><!--total no.of of students-->
+                <td>256911</td><!--total no.of schools-->
+                <td>6.40</td><!--drop out per-->
+                <td>72.94</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>UTTARAKHAND</td><!--state-->
+                <td>2014-2015</td><!--year-->
+                <td>2239683</td><!--total no.of of students-->
+                <td>23169</td><!--total no.of schools-->
+                <td>4.40</td><!--drop out per-->
+                <td>89.6</td><!--literacy per-->          
+            </tr>
+            
+            <tr>
+                <td id="checkbox_a" class="inner_checkbox"><div><input type="checkbox" id="checkbox_appearer"></div></td>
+                <td>WEST BENGAL</td><!--state-->
+                <td>2014-2015</td><!--year-->
+                <td>18393539</td><!--total no.of of students-->
+                <td>95153</td><!--total no.of schools-->
+                <td>4.80</td><!--drop out per-->
+                <td>85.5</td><!--literacy per-->          
+            </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>  
+    <div></div>
+    
+   
+</main>
+<div class="right">
+    <div class="top">
+        <button id="menu-btn">
+            <span class="material-icons-sharp">menu</span>
+        </button>
+        <div class="theme-toggler" id="themeToggler">
+            <span class="material-icons-sharp active">light_mode</span>
+            <span class="material-icons-sharp">dark_mode</span>
+        </div>
+        <div class="profile">
+            <div class="info">
+                <p>Hey, <b>Vaibhav</b></p>
+                <small class="text-muted">Admin</small>
+            </div>
+            <div class="profile-photo">
+                <img src="profile-2.jpg">
+            </div>
+        </div>
+
+    </div>
+    <!-- ============top===== -->
+    <div class="recent-updates">
+        <h2>Recent updates</h2>
+        <div class="updates">
+            <div class="update">
+                <div class="profile-photo">
+                    <img src="p.jpeg">
+                </div>
+                <div class="message">
+                    <p><b></b>Beti Bachao Beti Padhao</p>
+                            <small class="text-muted">create a more equitable and inclusive society for girls and women.</small>
+                            <small class="text-muted">30 minutes ago</small>
+                </div>
+                
+            </div>
+            <div class="update">
+                <div class="profile-photo">
+                    <img src="p.jpeg">
+                </div>
+                <div class="message">
+                    <p><b></b>Rashtriya Madhyamik Shiksha Abhiyan</p>
+                            <small class="text-muted">promote equity in education and provide young people with the skills and knowledge </small>
+                            <small class="text-muted">45 minutes ago</small>
+                </div>
+                
+            </div>
+            <div class="update">
+                <div class="profile-photo">
+                    <img src="p.jpeg">
+                </div>
+                <div class="message">
+                    <p><b></b>Scheme of Apprenticeship Training</p>
+                    <small class="text-muted">young people for successful careers and contribute to the overall development of the economy.</small>
+                    <small class="text-muted">5 hours ago</small>
+                </div>
+                
+                
+            </div>
+        </div>
+        <div class="sales-analytics">
+            <h2>Upcoming Schemes</h2>
+            <div class="item online">
+                <div class="icon"></div>
+                <span class="material-symbols-sharp">
+                    schedule
+                    </span>
+                <div class="right">
+                    <div class="info">
+                        <h3>Shiksha Sahayog Yojana</h3>
+                        <small class="text-muted">provides financial assistance to students from low-income families to help them afford the cost of education and improve their access to quality education.
+                        </small>
+                    </div>
+                    <h5 class="success"></h5>
+                    <h3></h3>
+                </div>
+            </div>
+            
+
+
+
+
+
+            <div class="item offline">
+                <div class="icon"></div>
+                <span class="material-symbols-sharp">
+                    cast_for_education
+                    </span>
+                <div class="right">
+                    <div class="info">
+                        <h3>Saakshar Shiksha Abhiyan</h3>
+                        <small class="text-muted">improve the literacy rates among adults, particularly women, and promote lifelong learning opportunities.</small>
+                    </div>
+                    <h5 class="danger"></h5>
+                    <h3></h3>
+                </div> 
+            </div>
+            
+            
+
+
+
+            
+
+
+        </div>
+        
+    </div>
+</div>
+</div>
+
+<script>
+    function myFunction() {
+        // Declare variables
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput");
+
+        filter = input.value.toUpperCase();
+        table = document.getElementById("tableID");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "block";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+    function kliendikaartF() {
+        var checkBox = document.getElementById("kaartCheck");
+        var elms = document.querySelectorAll("[id='checkbox_appearer']");
+        console.log(elms)
+        if (checkBox.checked == true) {
+            for (var i = 0; i < elms.length; i++) {
+                elms[i].checked = true;
+            }
+        } else {
+            for (var i = 0; i < elms.length; i++) {
+                elms[i].checked = false;
+            }
+        }
+    }
+    var kingcount = 0
+    function show_dissapear() {
+        var elmen = document.querySelectorAll("[id='checkbox_appearer']");
+        var elms = document.querySelectorAll("[id='checkbox_a']");
+        for (var i = 0; i < elmen.length; i++) {
+            elmen[i].checked = false;
+        }
+        if (kingcount == 0) {
+            for (var i = 0; i < elms.length; i++) {
+
+                elms[i].style.display = "block"
+
+            }
+
+            kingcount++
+        } else {
+            for (var i = 0; i < elms.length; i++) {
+
+                elms[i].style.display = "none"
+
+
+            }
+            kingcount--
+
+        }
+    }
+    function deleteMoreRows() {
+        var elms = document.querySelectorAll("[id='checkbox_appearer']");
+        table = document.getElementById('tableID')
+        console.log(kingcount)
+        if (kingcount != 0) {
+            if (confirm("Are you sure you want to delete this record")) {
+                for (var i = 0; i < elms.length; i++) {
+
+                    if (elms[i].checked == true) {
+                        console.log(i)
+                        table.deleteRow(i + 1)
+                        
+                    }
+
+
+
+
+                }
+            }
+        }
+
+
+    }
+    var state = document.getElementById('txtst')
+    var year = document.getElementById('txtyear')
+    var students = document.getElementById('txtstudents')
+    var schools = document.getElementById('txtschools')
+    var dropout = document.getElementById('txtdrop')
+    var lit = document.getElementById('txtliteracy')
+    divid = document.getElementById('insertvaluesid')
+
+    var newkingcount = 0
+    function addmorevalues() {
+
+        if (newkingcount == 0) {
+            setTimeout(1000)
+            divid.style.display = "block"
+            state.value = ""
+            year.value = ""
+            students.value = ""
+            schools.value = ""
+            dropout.value = ""
+            lit.value = ""
+            newkingcount++
+        } else {
+            setTimeout(1000)
+            divid.style.display = "none"
+            newkingcount--
+        }
+
+    }
+
+    function CreateTable() {
+
+        if (state.value == "" || year.value == "" || students.value == "" || schools.value == "" || dropout.value == "" || lit.value == "") {
+            alert("please do not enter null values")
+
+        } else {
+            var table = document.getElementById("tableID");
+            var row = table.insertRow(2);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            var cell6 = row.insertCell(5);
+            var inserter = state.value;
+            var tocaser = inserter.toUpperCase(); 
+            cell1.innerHTML = tocaser;
+            cell2.innerHTML = year.value;
+            cell3.innerHTML = students.value;
+            cell4.innerHTML = schools.value;
+            cell5.innerHTML = dropout.value;
+            cell6.innerHTML = lit.value;
+            state.value = ""
+            year.value = ""
+            students.value = ""
+            schools.value = ""
+            dropout.value = ""
+            lit.value = ""
+        }
+
+
+
+
+    }
+    // function sortbyvalue() {
+    //     var select = document.getElementById('state_search');
+    //     var text = select.options[select.selectedIndex].text;
+    //     var select1 = document.getElementById('year_search');
+    //     var text1 =select1.options[select1.selectedIndex].text;
+    //     console.log(text1)
+        
+        
+    //     // Declare variables
+        
+    //     if (text == "none" && text1 == "none"){
+
+    //         for (i = 0; i < tr.length; i++) {
+    //         tr[i].style.display ="block"
+            
+        
+    //     }
+    
+
+    //     }else if (text1 == "none"){
+    //         filter = text.toUpperCase();
+    //     table = document.getElementById("tableID");
+    //     tr = table.getElementsByTagName("tr");
+    //     console.log(filter)
+
+    //     // Loop through all table rows, and hide those who don't match the search query
+    //     for (i = 0; i < tr.length; i++) {
+    //         td = tr[i].getElementsByTagName("td")[1];
+    //         if (td) {
+    //             txtValue = td.textContent || td.innerText;
+    //             if (txtValue.toUpperCase().indexOf(filter) > -1) {
+    //                 tr[i].style.display = "block";
+    //             } else {
+    //                 tr[i].style.display = "none";
+    //             }
+    //         }
+    //     }
+            
+    //     }
+    // }
+        
+        
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</body>
+</html>
